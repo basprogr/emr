@@ -2679,6 +2679,8 @@ def main():
                 newURL = re.sub(r'\bpemeriksaan_ttv\b', 'cppt', url, flags=re.IGNORECASE)
             if opt == 'diagnose':
                 newURL = re.sub(r'\bcppt\b', 'implementasi_keperawatan', url, flags=re.IGNORECASE)
+            if opt == 'handover':
+                newURL = re.sub(r'\bimplementasi_keperawatan\b', 'handover_dewasa1', url, flags=re.IGNORECASE)
  
             pyperclip.copy(newURL)  
             pyautogui.hotkey('ctrl', 'v')   
@@ -2963,12 +2965,17 @@ def main():
     redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
     redirectCPPT_BT = tk.Button(rowButton_5_FR, text="r-cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
     redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
-    redirectDiagnose_BT = tk.Button(rowButton_5_FR, text="r-diag", font=(ff, fs), command=lambda: redirect('diagnose')) 
+    redirectDiagnose_BT = tk.Button(rowButton_5_FR, text="r-diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
     redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
+    redirectHandOver_BT = tk.Button(rowButton_5_FR, text="r-handover", font=(ff, fs), command=lambda: redirect('handover')) 
+    redirectHandOver_BT.pack(side=tk.LEFT, padx='1')   
 
-    auto_dewasa_BT = tk.Button(rowButton_5_FR, text="auto-d", font=(ff, fs), command=lambda: automate('d')) 
+    rowButton_6_FR = ttk.Frame(tab1)
+    rowButton_6_FR.grid(row=27, column=0, padx=1, pady=1, sticky="w")  
+ 
+    auto_dewasa_BT = tk.Button(rowButton_6_FR, text="auto-d", font=(ff, fs), command=lambda: automate('d')) 
     auto_dewasa_BT.pack(side=tk.LEFT, padx='1')    
-    auto_geriatri_BT = tk.Button(rowButton_5_FR, text="auto-g", font=(ff, fs), command=lambda: automate('g')) 
+    auto_geriatri_BT = tk.Button(rowButton_6_FR, text="auto-g", font=(ff, fs), command=lambda: automate('g')) 
     auto_geriatri_BT.pack(side=tk.LEFT, padx='1')    
 
 
