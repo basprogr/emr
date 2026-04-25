@@ -2674,13 +2674,13 @@ def main():
             url = pyperclip.paste()  
 
             if opt == 'ttv':
-                newURL = re.sub(r'\basperawat_ranap\b', 'pemeriksaan_ttv', url, flags=re.IGNORECASE)
-            if opt == 'cppt':
-                newURL = re.sub(r'\bpemeriksaan_ttv\b', 'cppt', url, flags=re.IGNORECASE)
-            if opt == 'diagnose':
-                newURL = re.sub(r'\bcppt\b', 'implementasi_keperawatan', url, flags=re.IGNORECASE)
-            if opt == 'handover':
-                newURL = re.sub(r'\bimplementasi_keperawatan\b', 'handover_dewasa1', url, flags=re.IGNORECASE)
+                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1pemeriksaan_ttv", url)  
+            if opt == 'cppt': 
+                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1cppt", url)  
+            if opt == 'diagnose': 
+                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1implementasi_keperawatan", url)  
+            if opt == 'handover': 
+                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1handover_dewasa1", url)  
  
             pyperclip.copy(newURL)  
             pyautogui.hotkey('ctrl', 'v')   
@@ -2978,8 +2978,6 @@ def main():
     auto_geriatri_BT = tk.Button(rowButton_6_FR, text="auto-g", font=(ff, fs), command=lambda: automate('g')) 
     auto_geriatri_BT.pack(side=tk.LEFT, padx='1')    
 
-
-
     # Button for report and rx
 
     report_FR = ttk.Frame(tab2)
@@ -3018,4 +3016,4 @@ password_entry.focus_set()
 submit = tk.Button(root, width='5', text='run', command=checkPassword)
 submit.grid(row=0, column=1)
 
-root.mainloop() 
+root.mainloop()
