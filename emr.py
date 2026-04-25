@@ -1187,7 +1187,7 @@ def main():
         pyautogui.press('tab')
         pyautogui.press('tab')
 
-        if alergi == '':
+        if alergi == '' or alergi == '-':
             pyautogui.press('right')
             pyautogui.press('left') 
             pyautogui.press('tab')
@@ -2689,6 +2689,53 @@ def main():
             # hindari berpindah tab untuk page terakhir 
             if i != redirectTotal - 1: 
                 pyautogui.hotkey('ctrl', 'tab')   
+
+    def handover():
+        time.sleep(2)
+        for _ in range(3):
+            pyautogui.press('tab') 
+        pyautogui.press('space') 
+
+        currentDate = datetime.now().strftime("%Y-%m-%d")
+        currentHour = datetime.now().hour
+
+        if currentHour > 6 and currentHour < 14:
+            pyautogui.press('down')  
+        elif currentHour > 13 and currentHour < 21:
+            pyautogui.press('down') 
+            pyautogui.press('down')  
+        else:
+            pyautogui.press('down') 
+            pyautogui.press('down') 
+            pyautogui.press('down')
+        pyautogui.press('enter')   
+  
+        for _ in range(35):
+            pyautogui.press('tab')  
+        
+        handOverTime = ''
+
+        if currentHour > 6 and currentHour < 14: 
+            handOverTime = currentDate + ' 14:00:00' 
+        elif currentHour > 13 and currentHour < 21: 
+            handOverTime = currentDate + ' 21:00:00' 
+        else:
+            # Shif malam
+            if currentHour > 20 and currentHour < 24 :
+                # ganti ke tanggal berikutnya jika sebelum jam 24
+                today = datetime.today()  
+                next_day = today + timedelta(days=1) 
+                tomorrow = next_day.strftime("%Y-%m-%d")
+ 
+                handOverTime = tomorrow + ' 07:00:00'  
+            else : 
+                # jika diatas jam 24, gunakan tanggal yang sama 
+                handOverTime = currentDate + ' 07:00:00' 
+ 
+        pyautogui.write(handOverTime) 
+
+        pyautogui.press('tab') 
+        pyautogui.press('space') 
  
     def automate(opt): 
         if opt == 'd':  
@@ -2947,6 +2994,8 @@ def main():
     cppt_lapor_BT.pack(side=tk.LEFT, padx='1')  
     cppt_perawat_BT = tk.Button(rowButton_3_FR, text="cppt-p", font=(ff, fs), command=lambda: cppt('p')) 
     cppt_perawat_BT.pack(side=tk.LEFT, padx='1') 
+    handover_BT = tk.Button(rowButton_3_FR, text="handover", font=(ff, fs), command=handover) 
+    handover_BT.pack(side=tk.LEFT, padx='1') 
 
     rowButton_4_FR = ttk.Frame(tab1)
     rowButton_4_FR.grid(row=25, column=0, padx=1, pady=1, sticky="w")  
