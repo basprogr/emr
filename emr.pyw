@@ -2836,6 +2836,63 @@ def main():
                 self.delete("1.0", "end")
                 self.config(fg=self.default_fg_color)
 
+    def autoTTV():
+        # 1. Ambil semua data dari Text widget
+        raw_data = vitalSignInput.get("1.0", tk.END).strip()
+        
+        if not raw_data:
+            messagebox.showwarning("Peringatan", "Data kosong!")
+            return
+
+        # 2. Pisahkan per baris
+        daftar_baris = raw_data.split('\n')
+
+        # Memberi waktu user untuk pindah ke window browser (3 detik)
+        messagebox.showinfo("Siap-siap", "Klik OK, lalu segera fokuskan kursor ke input field pertama di browser.\nAutomasi dimulai dalam 3 detik.")
+        time.sleep(3)
+
+        for baris in daftar_baris:
+            if not baris.strip(): continue # Skip jika ada baris kosong
+            
+            # 3. Parsing data (pecah berdasarkan '-')
+            # Susunan: tanggal-ruang-sistole-diastole-nadi-suhu-rr-spo2
+            data = baris.split('-')
+            
+            if len(data) < 7:
+                print(f"Format baris salah: {baris}")
+                continue
+
+            # Kita asumsikan kursor sudah ada di field pertama
+            # Urutan input sesuai keinginanmu:
+            # Sistole (index 2), Diastole (index 3), Nadi (4), Suhu (5), RR (6), SpO2 (7)
+            
+            # Contoh alur pengisian:
+            pyautogui.write(data[2]) # Sistole
+            pyautogui.press('tab')
+            
+            pyautogui.write(data[3]) # Diastole
+            pyautogui.press('tab')
+            
+            pyautogui.write(data[4]) # Nadi
+            pyautogui.press('tab')
+            
+            pyautogui.write(data[5]) # Suhu
+            pyautogui.press('tab')
+            
+            pyautogui.write(data[6]) # RR
+            pyautogui.press('tab')
+            
+            pyautogui.write(data[7]) # SpO2
+            
+            # 4. Berhenti sejenak dan minta konfirmasi untuk baris berikutnya
+            # Ini berfungsi sebagai "Pause" agar tidak bablas
+            msg = f"Baris selesai: {baris}\nLanjut ke baris berikutnya?"
+            if not messagebox.askyesno("Konfirmasi", msg):
+                break 
+            
+            # Beri jeda kecil agar user punya waktu klik field awal lagi jika perlu
+            time.sleep(1)
+
     # Main apps GUI
  
     app = tk.Tk()
@@ -2849,13 +2906,15 @@ def main():
     notebook = ttk.Notebook(app)
     notebook.pack(expand=True, fill='both')
  
-    tab1 = ttk.Frame(notebook)
-    tab2 = ttk.Frame(notebook) 
+    tab1 = ttk.Frame(notebook) 
+    tab2 = ttk.Frame(notebook)
+    tab3 = ttk.Frame(notebook) 
  
-    notebook.add(tab1, text='Patient')
-    notebook.add(tab2, text='Report') 
+    notebook.add(tab1, text='Routine') 
+    notebook.add(tab2, text='Patient')
+    notebook.add(tab3, text='Report') 
    
-    identity_frame = ttk.Frame(tab1)
+    identity_frame = ttk.Frame(tab2)
     identity_frame.grid(row=0, column=0, pady=1, sticky="w")  
     
     pindahan_entry = modEntry(identity_frame, width='5', font=(ff, fs), placeholder='Fr') 
@@ -2867,19 +2926,19 @@ def main():
     usia_entry = modEntry(identity_frame, width='5', font=(ff, fs), placeholder='Age') 
     usia_entry.pack(side=tk.LEFT, padx='1')  
     
-    diagnosa_entry = modEntry(tab1, width='40', font=(ff, fs), placeholder='Diagnosa') 
+    diagnosa_entry = modEntry(tab2, width='40', font=(ff, fs), placeholder='Diagnosa') 
     diagnosa_entry.grid(row=1, column=0, padx=1, pady=1, sticky="w")
  
-    keluhan_entry = modEntry(tab1, width='40', font=(ff, fs), placeholder='Keluhan') 
+    keluhan_entry = modEntry(tab2, width='40', font=(ff, fs), placeholder='Keluhan') 
     keluhan_entry.grid(row=2, column=0, padx=1, pady=1, sticky="w") 
  
-    rps_entry = modEntry(tab1, width='40', font=(ff, fs), placeholder='RPS') 
+    rps_entry = modEntry(tab2, width='40', font=(ff, fs), placeholder='RPS') 
     rps_entry.grid(row=3, column=0, padx=1, pady=1, sticky="w") 
  
-    rpd_entry = modEntry(tab1, width='40', font=(ff, fs), placeholder='RPD') 
+    rpd_entry = modEntry(tab2, width='40', font=(ff, fs), placeholder='RPD') 
     rpd_entry.grid(row=4, column=0, padx=1, pady=1, sticky="w") 
   
-    ttv_frame = ttk.Frame(tab1)
+    ttv_frame = ttk.Frame(tab2)
     ttv_frame.grid(row=5, column=0, sticky="w")  
 
     sistole_entry = modEntry(ttv_frame, width='5', font=(ff, fs), placeholder='Sis') 
@@ -2895,75 +2954,75 @@ def main():
     spo2_entry = modEntry(ttv_frame, width='5', font=(ff, fs), placeholder='Sat') 
     spo2_entry.pack(side=tk.LEFT, padx='1')
   
-    diet_alergi_frame = ttk.Frame(tab1)
+    diet_alergi_frame = ttk.Frame(tab2)
     diet_alergi_frame.grid(row=6, column=0, sticky="w")  
     diet_entry = modEntry(diet_alergi_frame, width='5', font=(ff, fs), placeholder='Diet') 
     diet_entry.pack(side=tk.LEFT, padx='1') 
     alergi_entry = modEntry(diet_alergi_frame, width='34', font=(ff, fs), placeholder='Allergy') 
     alergi_entry.pack(side=tk.LEFT, padx='1')  
       
-    tindakan_entry = modEntry(tab1, width=40, font=(ff, fs), placeholder='Plan') 
+    tindakan_entry = modEntry(tab2, width=40, font=(ff, fs), placeholder='Plan') 
     tindakan_entry.grid(row=7, column=0, padx=1, pady=1, sticky="w") 
  
-    dr_EN = modText(tab1, width=40, height=2, font=(ff, fs), placeholder='Doctor')
+    dr_EN = modText(tab2, width=40, height=2, font=(ff, fs), placeholder='Doctor')
     dr_EN.grid(row=8, column=0, padx=1, pady=1, sticky="w") 
       
-    terapi_entry = modText(tab1, width=40, height=5, font=(ff, fs), placeholder='Therapy')
+    terapi_entry = modText(tab2, width=40, height=5, font=(ff, fs), placeholder='Therapy')
     terapi_entry.grid(row=9, column=0, padx=1, pady=1, sticky="w")  
 
     # DIAGNOSA
  
     bersihanJalanNapas_VAR = tk.BooleanVar()  
-    bersihanJalanNapas = tk.Checkbutton(tab1, text="Bersihan Jalan Napas", font=(ff, fs), variable=bersihanJalanNapas_VAR)
+    bersihanJalanNapas = tk.Checkbutton(tab2, text="Bersihan Jalan Napas", font=(ff, fs), variable=bersihanJalanNapas_VAR)
     bersihanJalanNapas.grid(row=10, column=0, sticky='W')  
 
     diare_VAR = tk.BooleanVar()  
-    diare = tk.Checkbutton(tab1, text="Diare", font=(ff, fs), variable=diare_VAR)
+    diare = tk.Checkbutton(tab2, text="Diare", font=(ff, fs), variable=diare_VAR)
     diare.grid(row=11, column=0, sticky='W')  
   
     hipertermia_VAR = tk.BooleanVar()  
-    hipertermia = tk.Checkbutton(tab1, text="Hipertermia", font=(ff, fs), variable=hipertermia_VAR)
+    hipertermia = tk.Checkbutton(tab2, text="Hipertermia", font=(ff, fs), variable=hipertermia_VAR)
     hipertermia.grid(row=12, column=0, sticky='W') 
 
     hipervolemia_VAR = tk.BooleanVar()  
-    hipervolemia = tk.Checkbutton(tab1, text="Hipervolemia", font=(ff, fs), variable=hipervolemia_VAR)
+    hipervolemia = tk.Checkbutton(tab2, text="Hipervolemia", font=(ff, fs), variable=hipervolemia_VAR)
     hipervolemia.grid(row=13, column=0, sticky='W')            
 
     ketidakstabilanGD_VAR = tk.BooleanVar()   
-    ketidakstabilanGD = tk.Checkbutton(tab1, text="Ketidakstabilan GD", font=(ff, fs), variable=ketidakstabilanGD_VAR)
+    ketidakstabilanGD = tk.Checkbutton(tab2, text="Ketidakstabilan GD", font=(ff, fs), variable=ketidakstabilanGD_VAR)
     ketidakstabilanGD.grid(row=14, column=0, sticky='W') 
 
     nausea_VAR = tk.BooleanVar() 
-    nausea = tk.Checkbutton(tab1, text="Nausea", font=(ff, fs), variable=nausea_VAR)
+    nausea = tk.Checkbutton(tab2, text="Nausea", font=(ff, fs), variable=nausea_VAR)
     nausea.grid(row=15, column=0, sticky='W') 
 
     nyeriAkut_VAR = tk.BooleanVar()
-    nyeriAkut = tk.Checkbutton(tab1, text="Nyeri Akut", font=(ff, fs), variable=nyeriAkut_VAR)
+    nyeriAkut = tk.Checkbutton(tab2, text="Nyeri Akut", font=(ff, fs), variable=nyeriAkut_VAR)
     nyeriAkut.grid(row=16, column=0, sticky='W') 
 
     penurunanCurahJantung_VAR = tk.BooleanVar()
-    penurunanCurahJantung = tk.Checkbutton(tab1, text="Penurunan Curah Jantung", font=(ff, fs), variable=penurunanCurahJantung_VAR)
+    penurunanCurahJantung = tk.Checkbutton(tab2, text="Penurunan Curah Jantung", font=(ff, fs), variable=penurunanCurahJantung_VAR)
     penurunanCurahJantung.grid(row=17, column=0, sticky='W') 
 
     penurunanKapasitasAdaptif_VAR = tk.BooleanVar()
-    penurunanKapasitasAdaptif = tk.Checkbutton(tab1, text="Penurunan Kapasitas Adaptif", font=(ff, fs), variable=penurunanKapasitasAdaptif_VAR)
+    penurunanKapasitasAdaptif = tk.Checkbutton(tab2, text="Penurunan Kapasitas Adaptif", font=(ff, fs), variable=penurunanKapasitasAdaptif_VAR)
     penurunanKapasitasAdaptif.grid(row=18, column=0, sticky='W') 
 
     polaNapas_VAR = tk.BooleanVar()
-    polaNapas = tk.Checkbutton(tab1, text="Pola Napas", font=(ff, fs), variable=polaNapas_VAR)
+    polaNapas = tk.Checkbutton(tab2, text="Pola Napas", font=(ff, fs), variable=polaNapas_VAR)
     polaNapas.grid(row=19, column=0, sticky='W') 
 
     resikoInfeksi_VAR = tk.BooleanVar()
-    resikoInfeksi = tk.Checkbutton(tab1, text="Resiko Infeksi", font=(ff, fs), variable=resikoInfeksi_VAR)
+    resikoInfeksi = tk.Checkbutton(tab2, text="Resiko Infeksi", font=(ff, fs), variable=resikoInfeksi_VAR)
     resikoInfeksi.grid(row=20, column=0, sticky='W') 
 
     resikoJatuh_VAR = tk.BooleanVar()
-    resikoJatuh = tk.Checkbutton(tab1, text="Resiko Jatuh", font=(ff, fs), variable=resikoJatuh_VAR)
+    resikoJatuh = tk.Checkbutton(tab2, text="Resiko Jatuh", font=(ff, fs), variable=resikoJatuh_VAR)
     resikoJatuh.grid(row=21, column=0, sticky='W') 
   
     # BUTTON
 
-    rowButton_1_FR = ttk.Frame(tab1)
+    rowButton_1_FR = ttk.Frame(tab2)
     rowButton_1_FR.grid(row=22, column=0, padx=1, pady=1, sticky="w")  
      
     scan_BT = tk.Button(rowButton_1_FR, text="scan-i", font=(ff, fs), command=lambda: scan('i'))
@@ -2975,7 +3034,7 @@ def main():
     akrig_BT = tk.Button(rowButton_1_FR, text="asg", font=(ff, fs), command=akrig) 
     akrig_BT.pack(side=tk.LEFT, padx='1') 
 
-    rowButton_2_FR = ttk.Frame(tab1)
+    rowButton_2_FR = ttk.Frame(tab2)
     rowButton_2_FR.grid(row=23, column=0, padx=1, pady=1, sticky="w")  
 
     dp_BT = tk.Button(rowButton_2_FR, text="discharge", font=(ff, fs), command=dp) 
@@ -2985,11 +3044,9 @@ def main():
     ttv_BT = tk.Button(rowButton_2_FR, text="ttv", font=(ff, fs), command=ttv) 
     ttv_BT.pack(side=tk.LEFT, padx='1')  
 
-    rowButton_3_FR = ttk.Frame(tab1)
+    rowButton_3_FR = ttk.Frame(tab2)
     rowButton_3_FR.grid(row=24, column=0, padx=1, pady=1, sticky="w")  
-    
-    cppt_copy_BT = tk.Button(rowButton_3_FR, text="cppt-c", font=(ff, fs), command=lambda: cppt('c')) 
-    cppt_copy_BT.pack(side=tk.LEFT, padx='1')    
+     
     cppt_lapor_BT = tk.Button(rowButton_3_FR, text="cppt-l", font=(ff, fs), command=lambda: cppt('l')) 
     cppt_lapor_BT.pack(side=tk.LEFT, padx='1')  
     cppt_perawat_BT = tk.Button(rowButton_3_FR, text="cppt-p", font=(ff, fs), command=lambda: cppt('p')) 
@@ -2997,39 +3054,25 @@ def main():
     handover_BT = tk.Button(rowButton_3_FR, text="handover", font=(ff, fs), command=handover) 
     handover_BT.pack(side=tk.LEFT, padx='1') 
 
-    rowButton_4_FR = ttk.Frame(tab1)
+    rowButton_4_FR = ttk.Frame(tab2)
     rowButton_4_FR.grid(row=25, column=0, padx=1, pady=1, sticky="w")  
    
     diagnose_BT = tk.Button(rowButton_4_FR, text="Diagnose", font=(ff, fs), command=diagnose) 
     diagnose_BT.pack(side=tk.LEFT, padx='1')    
     reset_BT = tk.Button(rowButton_4_FR, text="Reset", font=(ff, fs), command=reset) 
     reset_BT.pack(side=tk.LEFT, padx='1')   
-    redirectTotal_EN = modEntry(rowButton_4_FR, width=5, font=(ff, fs), placeholder='loop')
-    redirectTotal_EN.pack(side=tk.LEFT, padx='1')   
-
-    rowButton_5_FR = ttk.Frame(tab1)
-    rowButton_5_FR.grid(row=26, column=0, padx=1, pady=1, sticky="w")  
  
-    redirectTTV_BT = tk.Button(rowButton_5_FR, text="r-ttv", font=(ff, fs), command=lambda: redirect('ttv')) 
-    redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
-    redirectCPPT_BT = tk.Button(rowButton_5_FR, text="r-cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
-    redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
-    redirectDiagnose_BT = tk.Button(rowButton_5_FR, text="r-diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
-    redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
-    redirectHandOver_BT = tk.Button(rowButton_5_FR, text="r-handover", font=(ff, fs), command=lambda: redirect('handover')) 
-    redirectHandOver_BT.pack(side=tk.LEFT, padx='1')   
-
-    rowButton_6_FR = ttk.Frame(tab1)
-    rowButton_6_FR.grid(row=27, column=0, padx=1, pady=1, sticky="w")  
+    rowButton_6_FR = ttk.Frame(tab2)
+    rowButton_6_FR.grid(row=26, column=0, padx=1, pady=1, sticky="w")  
  
     auto_dewasa_BT = tk.Button(rowButton_6_FR, text="auto-d", font=(ff, fs), command=lambda: automate('d')) 
     auto_dewasa_BT.pack(side=tk.LEFT, padx='1')    
     auto_geriatri_BT = tk.Button(rowButton_6_FR, text="auto-g", font=(ff, fs), command=lambda: automate('g')) 
     auto_geriatri_BT.pack(side=tk.LEFT, padx='1')    
 
-    # Button for report and rx
+    # Tab 2 : Report, Rx
 
-    report_FR = ttk.Frame(tab2)
+    report_FR = ttk.Frame(tab3)
     report_FR.grid(row=0, column=1, padx=5, sticky="ew")   
     report_LB = tk.Label(report_FR, text='Lapor Pasien :', font=(ff, fs)) 
     report_LB.pack(side=tk.LEFT)   
@@ -3037,10 +3080,10 @@ def main():
     report_button.pack(side=tk.RIGHT) 
     report_copy_BT = tk.Button(report_FR, width="8", text="copy", font=(ff, fs), command=copy_report) 
     report_copy_BT.pack(side=tk.RIGHT)  
-    report_EN = tk.Text(tab2, width=30, height=15) 
+    report_EN = tk.Text(tab3, width=30, height=15) 
     report_EN.grid(row=1, column=1, padx=5, rowspan=9, sticky="nsew")  
  
-    rx_FR = ttk.Frame(tab2)
+    rx_FR = ttk.Frame(tab3)
     rx_FR.grid(row=10, column=1, padx=5, sticky="ew")   
     rx_LB = tk.Label(rx_FR, text='Resep :', font=(ff, fs)) 
     rx_LB.pack(side=tk.LEFT)   
@@ -3048,8 +3091,37 @@ def main():
     rx_BT.pack(side=tk.RIGHT) 
     rx_copy_BT = tk.Button(rx_FR, text="copy", width="8",  font=(ff, fs), command=copy_rx) 
     rx_copy_BT.pack(side=tk.RIGHT)  
-    rx_EN = tk.Text(tab2, width=30, height=10) 
+    rx_EN = tk.Text(tab3, width=30, height=10) 
     rx_EN.grid(row=11, column=1, padx=5, rowspan=10, sticky="nsew")   
+
+    # Tab 1 : Routine 
+
+    databaseFieldset = ttk.LabelFrame(tab1, text=" Database ")
+    databaseFieldset.pack(padx=5, pady=5) 
+    vitalSignInput = tk.Text(databaseFieldset, width=50, height=10, font=(ff, fs))
+    vitalSignInput.pack(padx=5) 
+    vitalSignButton = tk.Button(databaseFieldset, text="Get vital sign", command=autoTTV)
+    vitalSignButton.pack(fill='x', padx=5, pady=5)
+
+    redirectFieldset = ttk.LabelFrame(tab1, text=" Redirect ")
+    redirectFieldset.pack(padx=5, pady=5)   
+    redirectTotal_EN = modEntry(redirectFieldset, width=5, font=(ff, fs), placeholder='loop')
+    redirectTotal_EN.pack(side=tk.LEFT, padx='1')    
+    redirectTTV_BT = tk.Button(redirectFieldset, text="ttv", font=(ff, fs), command=lambda: redirect('ttv')) 
+    redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
+    redirectCPPT_BT = tk.Button(redirectFieldset, text="cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
+    redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
+    redirectDiagnose_BT = tk.Button(redirectFieldset, text="diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
+    redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
+    redirectHandOver_BT = tk.Button(redirectFieldset, text="handover", font=(ff, fs), command=lambda: redirect('handover')) 
+    redirectHandOver_BT.pack(side=tk.LEFT, padx='1')  
+  
+    routineAutoFill = ttk.LabelFrame(tab1, text=" Autofill ")
+    routineAutoFill.pack(padx=5, pady=5)   
+    vitalSignAuto = tk.Button(routineAutoFill, text='TTV', font=(ff, fs), command=autoTTV)
+    vitalSignAuto.pack(side=tk.LEFT, padx='1')
+    cppt_copy_BT = tk.Button(routineAutoFill, text="CPPT", font=(ff, fs), command=lambda: cppt('c')) 
+    cppt_copy_BT.pack(side=tk.LEFT, padx='1')  
   
     app.mainloop()
       
