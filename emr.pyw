@@ -363,7 +363,7 @@ def main():
         pyautogui.press('tab')
         pyautogui.press('tab')
         
-        if opt == 'c': 
+        if opt == 'c' or opt == 'copy': 
             # Subyektif
 
             pyautogui.hotkey('ctrl', 'a')  
@@ -374,6 +374,14 @@ def main():
             pyautogui.hotkey('ctrl', 'v')   
 
             pyautogui.press('tab') 
+
+            pyautogui.hotkey('ctrl', 'a')  
+            pyautogui.hotkey('ctrl', 'c')  
+            o = pyperclip.paste()   
+            o_res = re.sub(r"\s*Rr[\s\S]*?(?:\sO2|lpm)\b", "\nDELETED", o)  
+            pyperclip.copy(o_res)  
+            pyautogui.hotkey('ctrl', 'v')
+ 
             pyautogui.press('tab') 
             pyautogui.press('tab') 
 
@@ -2664,8 +2672,8 @@ def main():
         pyautogui.press('tab') 
         pyautogui.press('enter') 
 
-    def redirect(opt):  
-        time.sleep(2)   
+    def redirect(opt):
+        time.sleep(2)
         redirectTotal = int(redirectTotal_EN.get())
          
         for i in range(redirectTotal):  
@@ -2836,63 +2844,280 @@ def main():
                 self.delete("1.0", "end")
                 self.config(fg=self.default_fg_color)
 
-    def autoTTV():
-        # 1. Ambil semua data dari Text widget
-        raw_data = vitalSignInput.get("1.0", tk.END).strip()
+     
+
+    def generate_buttons():
+        input_text = vitalSignInput.get("1.0", tk.END).strip()
+        lines = input_text.split('\n')
         
-        if not raw_data:
-            messagebox.showwarning("Peringatan", "Data kosong!")
-            return
+        for widget in routineAutoFieldset.winfo_children():
+            widget.destroy()
 
-        # 2. Pisahkan per baris
-        daftar_baris = raw_data.split('\n')
+        for line in lines:
+            if line.strip():
+                parts = line.split('-')
+                nomor_ruang = parts[1]
+                
+                # Setiap tombol mengirimkan SELURUH baris data ke fungsi autoTTV
+                btn = tk.Button(
+                    routineAutoFieldset, 
+                    text=f"Isi Form Ruang {nomor_ruang}",
+                    command=lambda l=line: autoRoutine(l)
+                )
+                btn.pack(pady=2, padx=10)
+    
+    def autoTTV(line_data): 
+        data = line_data.split('-')
+        
+        # Mapping variabel 
+        sistole  = data[2]
+        diastole = data[3]
+        nadi     = data[4]
+        suhu     = data[5]
+        rr       = data[6]
+        spo2     = data[7]
+        o2       = data[8] 
+  
+        pyautogui.write(rr)
+        pyautogui.press('tab') 
+        pyautogui.write(spo2)
+        pyautogui.press('tab') 
+        if o2 == '0' : 
+            pyautogui.press('tab') 
+        else: 
+            pyautogui.press('right')
+            pyautogui.press('tab')   
+        pyautogui.write(suhu)
+        pyautogui.press('tab') 
+        pyautogui.write(sistole)
+        pyautogui.press('tab') 
+        pyautogui.write(diastole)
+        pyautogui.press('tab') 
+        pyautogui.write(nadi)
+        pyautogui.press('enter')
 
-        # Memberi waktu user untuk pindah ke window browser (3 detik)
-        messagebox.showinfo("Siap-siap", "Klik OK, lalu segera fokuskan kursor ke input field pertama di browser.\nAutomasi dimulai dalam 3 detik.")
-        time.sleep(3)
+        messagebox.showinfo('Notification', 'Continue to CPPT ?')
 
-        for baris in daftar_baris:
-            if not baris.strip(): continue # Skip jika ada baris kosong
-            
-            # 3. Parsing data (pecah berdasarkan '-')
-            # Susunan: tanggal-ruang-sistole-diastole-nadi-suhu-rr-spo2
-            data = baris.split('-')
-            
-            if len(data) < 7:
-                print(f"Format baris salah: {baris}")
-                continue
+    def openLink(opt): 
+        pyautogui.hotkey('ctrl', 'l')  
+        pyautogui.hotkey('ctrl', 'c')  
+        url = pyperclip.paste()  
 
-            # Kita asumsikan kursor sudah ada di field pertama
-            # Urutan input sesuai keinginanmu:
-            # Sistole (index 2), Diastole (index 3), Nadi (4), Suhu (5), RR (6), SpO2 (7)
-            
-            # Contoh alur pengisian:
-            pyautogui.write(data[2]) # Sistole
-            pyautogui.press('tab')
-            
-            pyautogui.write(data[3]) # Diastole
-            pyautogui.press('tab')
-            
-            pyautogui.write(data[4]) # Nadi
-            pyautogui.press('tab')
-            
-            pyautogui.write(data[5]) # Suhu
-            pyautogui.press('tab')
-            
-            pyautogui.write(data[6]) # RR
-            pyautogui.press('tab')
-            
-            pyautogui.write(data[7]) # SpO2
-            
-            # 4. Berhenti sejenak dan minta konfirmasi untuk baris berikutnya
-            # Ini berfungsi sebagai "Pause" agar tidak bablas
-            msg = f"Baris selesai: {baris}\nLanjut ke baris berikutnya?"
-            if not messagebox.askyesno("Konfirmasi", msg):
-                break 
-            
-            # Beri jeda kecil agar user punya waktu klik field awal lagi jika perlu
-            time.sleep(1)
+        if opt == 'ttv':
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1pemeriksaan_ttv", url)  
+        if opt == 'cppt': 
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1cppt", url)  
+        if opt == 'diagnose': 
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1implementasi_keperawatan", url)  
+        if opt == 'handover': 
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1handover_dewasa1", url)  
+ 
+        pyperclip.copy(newURL)  
+        pyautogui.hotkey('ctrl', 'v')   
+        pyautogui.press('enter') 
 
+        messagebox.showinfo('Notification', 'Continue ?')
+
+    def copyCPPT(line_data):  
+        data = line_data.split('-')
+        
+        # Mapping variabel 
+        sistole  = data[2]
+        diastole = data[3]
+        nadi     = data[4]
+        suhu     = data[5]
+        rr       = data[6]
+        spo2     = data[7]
+        o2       = data[8] 
+
+        statusO2 = ''
+        if o2 == '0' :
+            statusO2 = 'tanpa O2'
+        else :
+            statusO2 = 'dengan O2'
+
+        stringTTV = f'TD: {sistole}/{diastole}, N: {nadi}, S: {suhu}, RR: {rr}, SPO2: {spo2} {statusO2}'
+   
+        currentDate = datetime.now().strftime("%Y-%m-%d")
+        currentHour = datetime.now().hour 
+        cpptTime = ''
+        if currentHour > 6 and currentHour < 14:
+            cpptTime = currentDate + ' 12:00:00'
+            handOverTime = currentDate + ' 14:00:00' 
+        elif currentHour > 13 and currentHour < 21:
+            cpptTime = currentDate + ' 19:00:00'
+            handOverTime = currentDate + ' 21:00:00' 
+        else:
+            # Shif malam
+            if currentHour > 20 and currentHour < 24 :
+                # ganti ke tanggal berikutnya jika sebelum jam 24
+                today = datetime.today()  
+                next_day = today + timedelta(days=1) 
+                tomorrow = next_day.strftime("%Y-%m-%d")
+
+                cpptTime = tomorrow + ' 05:00:00'
+                handOverTime = tomorrow + ' 07:00:00'  
+            else : 
+                # jika diatas jam 24, gunakan tanggal yang sama
+                cpptTime = currentDate + ' 05:00:00'
+                handOverTime = currentDate + ' 07:00:00' 
+ 
+        pyautogui.write(cpptTime)
+        pyautogui.press('tab')
+        pyautogui.press('tab')
+
+        pyautogui.hotkey('ctrl', 'a')  
+        pyautogui.hotkey('ctrl', 'c')  
+        s = pyperclip.paste()  
+        s_res = re.sub(r'pasien mengatakan\s*', '', s, flags=re.IGNORECASE)   
+        pyperclip.copy(s_res)  
+        pyautogui.hotkey('ctrl', 'v')   
+
+        pyautogui.press('tab') 
+
+        pyautogui.hotkey('ctrl', 'a')  
+        pyautogui.hotkey('ctrl', 'c')  
+        o = pyperclip.paste()   
+        o_res = re.sub(r"\s*Rr[\s\S]*?(?:\sO2|lpm)\b", f"\n{stringTTV}", o)  
+        pyperclip.copy(o_res)  
+        pyautogui.hotkey('ctrl', 'v')
+ 
+        pyautogui.press('tab') 
+        pyautogui.press('tab') 
+
+        # Asesmen
+ 
+        pyautogui.hotkey('ctrl', 'a')  
+        pyautogui.hotkey('ctrl', 'c')  
+        asesmen = pyperclip.paste()  
+
+        asesmen_new = []
+        implementasi = [] # sekalian bikin implementasi lah
+        intervensi = [] # sekalian bikin intervensi dari asesmen yang didapat 
+ 
+        if re.search(r'nyeri', asesmen, re.IGNORECASE):
+            asesmen_new.append("nyeri akut") 
+            implementasi.append('skala nyeri menurun')
+            implementasi.append('grimace berkurang')
+            intervensi.append("kaji keluhan nyeri") 
+ 
+        if re.search(r'pola napas', asesmen, re.IGNORECASE):
+            asesmen_new.append("pola napas tidak efektif")
+            implementasi.append('frekuensi napas membaik')  
+            implementasi.append('dipsnea menurun')  
+            intervensi.append("pantau kepatenan jalan napas")  
+            intervensi.append("monitor saturasi secara berkala") 
+
+        if re.search(r'pola nafas', asesmen, re.IGNORECASE):
+            asesmen_new.append("pola napas tidak efektif")  
+            implementasi.append('frekuensi napas membaik')  
+            implementasi.append('dipsnea menurun')   
+            intervensi.append("pantau kepatenan jalan napas") 
+            intervensi.append("monitor saturasi secara berkala") 
+
+        if re.search(r'bersihan', asesmen, re.IGNORECASE):
+            asesmen_new.append("bersihan jalan napas tidak efektif") 
+            implementasi.append('produksi sputum menurun')   
+            implementasi.append('wheezing/ronchi menurun')   
+            intervensi.append("kaji keluhan batuk") 
+            intervensi.append("monitor suara nafas") 
+
+        if re.search(r'curah jantung', asesmen, re.IGNORECASE):
+            asesmen_new.append("penurunan curah jantung")
+            implementasi.append('status hemodinamik membaik')   
+            intervensi.append("monitor status hemodinamik") 
+
+        if re.search(r'hipertermi', asesmen, re.IGNORECASE):
+            asesmen_new.append("hipertermia")
+            implementasi.append('suhu tubuh dalam batas normal')   
+            intervensi.append("monitor suhu tubuh bila perlu") 
+
+        if re.search(r'hipervolemi', asesmen, re.IGNORECASE):
+            asesmen_new.append("hipervolemia")
+            implementasi.append('intake dan output seimbang')   
+            implementasi.append('edema berkurang')   
+            intervensi.append("batasi asupan cairan") 
+            intervensi.append("monitor keseimbangan cairan") 
+
+        if re.search(r'nausea', asesmen, re.IGNORECASE):
+            asesmen_new.append("nausea")
+            implementasi.append('keluhan mual berkurang')   
+            intervensi.append("monitor keluhan muntah") 
+            intervensi.append("pantau isyarat nonverbal ketidaknyamanan") 
+
+        if re.search(r'adaptif', asesmen, re.IGNORECASE):
+            asesmen_new.append("penurunan kapasitas adaptif intrakranial")
+            implementasi.append('tingkat kesadaran membaik')   
+            implementasi.append('irama napas membaik')   
+            intervensi.append("monitor peningkatan tekanan darah") 
+            intervensi.append("monitor irreguleritas irama napas") 
+            intervensi.append("monitor penurunan tingkat kesadaran") 
+
+        if re.search(r'ketidakstabilan', asesmen, re.IGNORECASE):
+            asesmen_new.append("resiko ketidakstabilan kadar gula darah")
+            implementasi.append('kadar gula darah dalam batas normal')   
+            intervensi.append("pantau kadar gula darah secara berkala") 
+
+        if re.search(r'infeksi', asesmen, re.IGNORECASE):
+            asesmen_new.append("resiko infeksi")
+            implementasi.append('tidak ada tanda infeksi') 
+            intervensi.append("pantau tanda tanda infeksi") 
+
+        if re.search(r'jatuh', asesmen, re.IGNORECASE):
+            asesmen_new.append("resiko jatuh")
+            implementasi.append('tidak ada kejadian jatuh')  
+            intervensi.append("pasang kunci bed dan siderail") 
+ 
+        # Convert asesmen_new to a numbered string with new lines
+        asesmen_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(asesmen_new))  
+        pyperclip.copy(asesmen_numbering)  
+        pyautogui.hotkey('ctrl', 'v')   
+        pyautogui.press('tab') 
+        pyautogui.press('tab') 
+
+        # Planning
+
+        pyautogui.hotkey('ctrl', 'a')  
+        implementasi.insert(0, 'ttv dalam batas normal') 
+        implementasi_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(implementasi))  
+        pyperclip.copy(implementasi_numbering)  
+        pyautogui.hotkey('ctrl', 'v')   
+        pyautogui.press('tab') 
+        pyautogui.press('tab')  
+
+        # Intervensi 
+
+        intervensi.insert(0, "monitor tanda vital") # Add to beginning list
+        intervensi.append("kolaborasi dengan tim medis") # Add to end of list 
+        intervensi_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(intervensi)) 
+        pyperclip.copy(intervensi_numbering)  
+        pyautogui.hotkey('ctrl', 'v')   
+
+        pyautogui.press('tab') 
+        pyautogui.press('right') 
+        pyautogui.press('left') 
+        pyautogui.press('tab')  
+        pyautogui.write(handOverTime) 
+        pyautogui.press('tab')  
+
+        if currentHour > 6 and currentHour < 14:
+            pyautogui.write('p')  
+        elif currentHour > 13 and currentHour < 21:
+            pyautogui.write('s')  
+        else:
+            pyautogui.write('m') 
+        pyautogui.press('tab')
+         
+    def autoRoutine(line_data): 
+        time.sleep(2)
+        autoTTV(line_data)
+        time.sleep(2)
+        openLink('cppt')
+        time.sleep(2)
+        copyCPPT(line_data)
+        time.sleep(2) 
+
+          
     # Main apps GUI
  
     app = tk.Tk()
@@ -2913,6 +3138,46 @@ def main():
     notebook.add(tab1, text='Routine') 
     notebook.add(tab2, text='Patient')
     notebook.add(tab3, text='Report') 
+
+    # Tab 1 : Routine 
+
+    databaseFieldset = ttk.LabelFrame(tab1, text=" Database ")
+    databaseFieldset.pack(padx=5, pady=5) 
+    vitalSignInput = tk.Text(databaseFieldset, width=50, height=10, font=(ff, fs))
+    vitalSignInput.pack(padx=5) 
+
+    vitalSignButton = tk.Button(databaseFieldset, text="Fetch", command=autoTTV)
+    vitalSignButton.pack(side=tk.LEFT, padx=1)
+    
+    generateButton = tk.Button(databaseFieldset, text="Generate", command=generate_buttons)
+    generateButton.pack(side=tk.LEFT, padx=1)
+
+    routineAutoFieldset = ttk.LabelFrame(tab1, text=" Autofill ")
+    routineAutoFieldset.pack(fill='x', padx=5, pady=5)    
+    info = tk.Label(routineAutoFieldset, text='Generated button will appear here', font=(ff, fs)) 
+    info.pack()  
+
+
+
+    # vitalSignAuto = tk.Button(routineAutoFill, text='TTV', font=(ff, fs), command=autoTTV)
+    # vitalSignAuto.pack(side=tk.LEFT, padx='1')
+    # cppt_copy_BT = tk.Button(routineAutoFill, text="CPPT", font=(ff, fs), command=lambda: cppt('c')) 
+    # cppt_copy_BT.pack(side=tk.LEFT, padx='1')  
+
+    # redirectFieldset = ttk.LabelFrame(tab1, text=" Redirect ")
+    # redirectFieldset.pack(padx=5, pady=5)   
+    # redirectTotal_EN = modEntry(redirectFieldset, width=5, font=(ff, fs), placeholder='loop')
+    # redirectTotal_EN.pack(side=tk.LEFT, padx='1')    
+    # redirectTTV_BT = tk.Button(redirectFieldset, text="ttv", font=(ff, fs), command=lambda: redirect('ttv')) 
+    # redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
+    # redirectCPPT_BT = tk.Button(redirectFieldset, text="cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
+    # redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
+    # redirectDiagnose_BT = tk.Button(redirectFieldset, text="diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
+    # redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
+    # redirectHandOver_BT = tk.Button(redirectFieldset, text="handover", font=(ff, fs), command=lambda: redirect('handover')) 
+    # redirectHandOver_BT.pack(side=tk.LEFT, padx='1')  
+
+    # ------------------------------------------------------------------------------------------
    
     identity_frame = ttk.Frame(tab2)
     identity_frame.grid(row=0, column=0, pady=1, sticky="w")  
@@ -3094,34 +3359,9 @@ def main():
     rx_EN = tk.Text(tab3, width=30, height=10) 
     rx_EN.grid(row=11, column=1, padx=5, rowspan=10, sticky="nsew")   
 
-    # Tab 1 : Routine 
-
-    databaseFieldset = ttk.LabelFrame(tab1, text=" Database ")
-    databaseFieldset.pack(padx=5, pady=5) 
-    vitalSignInput = tk.Text(databaseFieldset, width=50, height=10, font=(ff, fs))
-    vitalSignInput.pack(padx=5) 
-    vitalSignButton = tk.Button(databaseFieldset, text="Get vital sign", command=autoTTV)
-    vitalSignButton.pack(fill='x', padx=5, pady=5)
-
-    redirectFieldset = ttk.LabelFrame(tab1, text=" Redirect ")
-    redirectFieldset.pack(padx=5, pady=5)   
-    redirectTotal_EN = modEntry(redirectFieldset, width=5, font=(ff, fs), placeholder='loop')
-    redirectTotal_EN.pack(side=tk.LEFT, padx='1')    
-    redirectTTV_BT = tk.Button(redirectFieldset, text="ttv", font=(ff, fs), command=lambda: redirect('ttv')) 
-    redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
-    redirectCPPT_BT = tk.Button(redirectFieldset, text="cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
-    redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
-    redirectDiagnose_BT = tk.Button(redirectFieldset, text="diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
-    redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
-    redirectHandOver_BT = tk.Button(redirectFieldset, text="handover", font=(ff, fs), command=lambda: redirect('handover')) 
-    redirectHandOver_BT.pack(side=tk.LEFT, padx='1')  
+    
   
-    routineAutoFill = ttk.LabelFrame(tab1, text=" Autofill ")
-    routineAutoFill.pack(padx=5, pady=5)   
-    vitalSignAuto = tk.Button(routineAutoFill, text='TTV', font=(ff, fs), command=autoTTV)
-    vitalSignAuto.pack(side=tk.LEFT, padx='1')
-    cppt_copy_BT = tk.Button(routineAutoFill, text="CPPT", font=(ff, fs), command=lambda: cppt('c')) 
-    cppt_copy_BT.pack(side=tk.LEFT, padx='1')  
+   
   
     app.mainloop()
       
