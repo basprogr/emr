@@ -290,8 +290,7 @@ def main():
         except Exception as e: 
             messagebox.showinfo('?', e) 
 
-    def ttv():  
-        time.sleep(2)   
+    def ttv():   
         pyautogui.write(rr_entry.get())
         pyautogui.press('tab')  
         pyautogui.write(spo2_entry.get())
@@ -305,8 +304,7 @@ def main():
         pyautogui.press('tab')  
         pyautogui.write(nadi_entry.get())
         pyautogui.press('enter') 
-
-
+ 
     def terima_transfer():   
         time.sleep(2)   
         pyautogui.write(rr_entry.get())
@@ -333,8 +331,7 @@ def main():
         pyautogui.press('enter')
         messagebox.showinfo("?", "Terima transfer selesai") 
   
-    def cppt(opt):  
-        time.sleep(2) 
+    def cppt(opt):   
         currentDate = datetime.now().strftime("%Y-%m-%d")
         currentHour = datetime.now().hour 
         cpptTime = ''
@@ -391,62 +388,62 @@ def main():
             pyautogui.hotkey('ctrl', 'c')  
             asesmen = pyperclip.paste()  
 
-            asesmen_new = []
+            diagnoseList = []
             implementasi = [] # sekalian bikin implementasi lah
             intervensi = [] # sekalian bikin intervensi dari asesmen yang didapat 
  
             if re.search(r'nyeri', asesmen, re.IGNORECASE):
-                asesmen_new.append("nyeri akut") 
+                diagnoseList.append("nyeri akut") 
                 implementasi.append('skala nyeri menurun')
                 implementasi.append('grimace berkurang')
                 intervensi.append("kaji keluhan nyeri") 
  
             if re.search(r'pola napas', asesmen, re.IGNORECASE):
-                asesmen_new.append("pola napas tidak efektif")
+                diagnoseList.append("pola napas tidak efektif")
                 implementasi.append('frekuensi napas membaik')  
                 implementasi.append('dipsnea menurun')  
                 intervensi.append("pantau kepatenan jalan napas")  
                 intervensi.append("monitor saturasi secara berkala") 
 
             if re.search(r'pola nafas', asesmen, re.IGNORECASE):
-                asesmen_new.append("pola napas tidak efektif")  
+                diagnoseList.append("pola napas tidak efektif")  
                 implementasi.append('frekuensi napas membaik')  
                 implementasi.append('dipsnea menurun')   
                 intervensi.append("pantau kepatenan jalan napas") 
                 intervensi.append("monitor saturasi secara berkala") 
 
             if re.search(r'bersihan', asesmen, re.IGNORECASE):
-                asesmen_new.append("bersihan jalan napas tidak efektif") 
+                diagnoseList.append("bersihan jalan napas tidak efektif") 
                 implementasi.append('produksi sputum menurun')   
                 implementasi.append('wheezing/ronchi menurun')   
                 intervensi.append("kaji keluhan batuk") 
                 intervensi.append("monitor suara nafas") 
 
             if re.search(r'curah jantung', asesmen, re.IGNORECASE):
-                asesmen_new.append("penurunan curah jantung")
+                diagnoseList.append("penurunan curah jantung")
                 implementasi.append('status hemodinamik membaik')   
                 intervensi.append("monitor status hemodinamik") 
             
             if re.search(r'hipertermi', asesmen, re.IGNORECASE):
-                asesmen_new.append("hipertermia")
+                diagnoseList.append("hipertermia")
                 implementasi.append('suhu tubuh dalam batas normal')   
                 intervensi.append("monitor suhu tubuh bila perlu") 
 
             if re.search(r'hipervolemi', asesmen, re.IGNORECASE):
-                asesmen_new.append("hipervolemia")
+                diagnoseList.append("hipervolemia")
                 implementasi.append('intake dan output seimbang')   
                 implementasi.append('edema berkurang')   
                 intervensi.append("batasi asupan cairan") 
                 intervensi.append("monitor keseimbangan cairan") 
 
             if re.search(r'nausea', asesmen, re.IGNORECASE):
-                asesmen_new.append("nausea")
+                diagnoseList.append("nausea")
                 implementasi.append('keluhan mual berkurang')   
                 intervensi.append("monitor keluhan muntah") 
                 intervensi.append("pantau isyarat nonverbal ketidaknyamanan") 
 
             if re.search(r'adaptif', asesmen, re.IGNORECASE):
-                asesmen_new.append("penurunan kapasitas adaptif intrakranial")
+                diagnoseList.append("penurunan kapasitas adaptif intrakranial")
                 implementasi.append('tingkat kesadaran membaik')   
                 implementasi.append('irama napas membaik')   
                 intervensi.append("monitor peningkatan tekanan darah") 
@@ -454,22 +451,22 @@ def main():
                 intervensi.append("monitor penurunan tingkat kesadaran") 
 
             if re.search(r'ketidakstabilan', asesmen, re.IGNORECASE):
-                asesmen_new.append("resiko ketidakstabilan kadar gula darah")
+                diagnoseList.append("resiko ketidakstabilan kadar gula darah")
                 implementasi.append('kadar gula darah dalam batas normal')   
                 intervensi.append("pantau kadar gula darah secara berkala") 
 
             if re.search(r'infeksi', asesmen, re.IGNORECASE):
-                asesmen_new.append("resiko infeksi")
+                diagnoseList.append("resiko infeksi")
                 implementasi.append('tidak ada tanda infeksi') 
                 intervensi.append("pantau tanda tanda infeksi") 
 
             if re.search(r'jatuh', asesmen, re.IGNORECASE):
-                asesmen_new.append("resiko jatuh")
+                diagnoseList.append("resiko jatuh")
                 implementasi.append('tidak ada kejadian jatuh')  
                 intervensi.append("pasang kunci bed dan siderail") 
  
-            # Convert asesmen_new to a numbered string with new lines
-            asesmen_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(asesmen_new))  
+            # Convert diagnoseList to a numbered string with new lines
+            asesmen_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(diagnoseList))  
             pyperclip.copy(asesmen_numbering)  
             pyautogui.hotkey('ctrl', 'v')   
             pyautogui.press('tab') 
@@ -687,18 +684,15 @@ def main():
                 pyautogui.press('tab') 
                 pyautogui.press('right')  
  
-    def dp():  
-        time.sleep(2) 
+    def discharge():   
         pyautogui.write("KIE minum obat sesuai anjuran")
         pyautogui.press('enter') 
         pyautogui.write("KIE kontrol sesuai jadwal")
         pyautogui.press('tab')
         pyautogui.press('tab') 
-        pyautogui.press('enter') 
+        pyautogui.press('enter')  
 
-    def akrid(): 
-        time.sleep(2)
-
+    def akrid():   
         keluhan = keluhan_entry.get()
         rps = rps_entry.get()
         rpd = rpd_entry.get()
@@ -1164,10 +1158,8 @@ def main():
         for i in range(20):
             pyautogui.press('tab') 
         pyautogui.write('-')    
-
-    def akrig():  
-        time.sleep(2)
-
+ 
+    def akrig():   
         keluhan = keluhan_entry.get()
         rps = rps_entry.get()
         rpd = rpd_entry.get()
@@ -1780,104 +1772,100 @@ def main():
             ("polaNapas_VAR", polaNapas_VAR.get()),
             ("resikoInfeksi_VAR", resikoInfeksi_VAR.get()),
             ("resikoJatuh_VAR", resikoJatuh_VAR.get())
-        ]
-  
+        ] 
         # Cari variabel terakhir yang bernilai True
         last_true = None
         for name, value in variables:
             if value:
                 last_true = name
-  
-        time.sleep(2) 
+   
         for _ in range(5):
             pyautogui.press('tab')
         if bersihanJalanNapas_VAR.get():
                 pyautogui.press('space')
                 if last_true == 'bersihanJalanNapas_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(8):
             pyautogui.press('tab')
         if diare_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'diare_VAR' :
-                    implement()
+                    # implement()
                     return 
         for _ in range(32):
             pyautogui.press('tab')
         if hipertermia_VAR.get():
                 pyautogui.press('space')   
                 if last_true == 'hipertermia_VAR' :
-                    implement()
+                    # implement()
                     return  
         for _ in range(2):
             pyautogui.press('tab')
         if hipervolemia_VAR.get():
                 pyautogui.press('space')  
                 if last_true == 'hipervolemia_VAR' :
-                    implement()
+                    # implement()
                     return  
         for _ in range(24):
             pyautogui.press('tab')
         if ketidakstabilanGD_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'ketidakstabilanGD_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(10):
             pyautogui.press('tab')
         if nausea_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'nausea_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(2):
             pyautogui.press('tab')
         if nyeriAkut_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'nyeriAkut_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(6):
             pyautogui.press('tab')
         if penurunanCurahJantung_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'penurunanCurahJantung_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(2):
             pyautogui.press('tab')
         if penurunanKapasitasAdaptif_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'penurunanKapasitasAdaptif_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(8):
             pyautogui.press('tab')
         if polaNapas_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'polaNapas_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(28):
             pyautogui.press('tab')
         if resikoInfeksi_VAR.get():
                 pyautogui.press('space')    
                 if last_true == 'resikoInfeksi_VAR' :
-                    implement()
+                    # implement()
                     return
         for _ in range(4):
             pyautogui.press('tab')
         if resikoJatuh_VAR.get():
                 pyautogui.press('space')   
                 if last_true == 'resikoJatuh_VAR' :
-                    implement()
-                    return  
-   
-    def implement():
-        messagebox.showinfo("?", "implementasi sudah dimuat?") 
-        time.sleep(2)
-        
+                    # implement()
+                    return 
+        messagebox.showinfo('Notifikasi', "Diagnosa selesai. Lanjutkan implementasi?")
+
+    def implement():  
         # PENYEBAB 
         if bersihanJalanNapas_VAR.get():
             for _ in range(12):
@@ -2670,34 +2658,8 @@ def main():
             pyautogui.press('tab')  
         
         pyautogui.press('tab') 
-        pyautogui.press('enter') 
-
-    def redirect(opt):
-        time.sleep(2)
-        redirectTotal = int(redirectTotal_EN.get())
-         
-        for i in range(redirectTotal):  
-            pyautogui.hotkey('ctrl', 'l')  
-            pyautogui.hotkey('ctrl', 'c')  
-            url = pyperclip.paste()  
-
-            if opt == 'ttv':
-                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1pemeriksaan_ttv", url)  
-            if opt == 'cppt': 
-                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1cppt", url)  
-            if opt == 'diagnose': 
-                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1implementasi_keperawatan", url)  
-            if opt == 'handover': 
-                newURL = re.sub(r"(rawatinap/)[^?]+", r"\1handover_dewasa1", url)  
- 
-            pyperclip.copy(newURL)  
-            pyautogui.hotkey('ctrl', 'v')   
-            pyautogui.press('enter') 
-
-            # hindari berpindah tab untuk page terakhir 
-            if i != redirectTotal - 1: 
-                pyautogui.hotkey('ctrl', 'tab')   
-
+        pyautogui.press('enter')  
+  
     def handover():
         time.sleep(2)
         for _ in range(3):
@@ -2718,7 +2680,7 @@ def main():
             pyautogui.press('down')
         pyautogui.press('enter')   
   
-        for _ in range(35):
+        for _ in range(36):
             pyautogui.press('tab')  
         
         handOverTime = ''
@@ -2746,60 +2708,45 @@ def main():
         pyautogui.press('space') 
  
     def automate(opt): 
-        if opt == 'd':  
-            akrid() 
-        else: 
-            akrig() 
-
-        messagebox.showinfo("?", "Lanjutkan diagnosa?") 
-        diagnose() 
-
-        messagebox.showinfo("?", "Lanjutkan discard planning?")  
+        time.sleep(2) 
+        openLink('discharge')  
+        messagebox.showinfo('Notifikasi', "Isi discharge planning?")
         time.sleep(2)
-        pyautogui.hotkey('ctrl', 'l')  
-        pyautogui.hotkey('ctrl', 'c')  
-        url = pyperclip.paste()   
-
-        if opt == 'd' :
-            newURL = re.sub(r'\basperawat_ranap\b', 'discharge_planning', url, flags=re.IGNORECASE)
-        else:
-            newURL = re.sub(r'\basperawat_ranap_geriatri\b', 'discharge_planning', url, flags=re.IGNORECASE)
-  
-        pyperclip.copy(newURL)  
-        pyautogui.hotkey('ctrl', 'v')   
-        pyautogui.press('enter') 
-
-        messagebox.showinfo("?", "Mengisi discharge planning?")
-        dp()
-
-        messagebox.showinfo("?", "Lanjut TTV ?")  
+        discharge() 
+        messagebox.showinfo('Notifikasi', "Discharge planning selesai. Lanjutkan TTV?") 
         time.sleep(2)
-        pyautogui.hotkey('ctrl', 'l')  
-        pyautogui.hotkey('ctrl', 'c')  
-        url = pyperclip.paste()  
-        newURL = re.sub(r'\bdischarge_planning\b', 'pemeriksaan_ttv', url, flags=re.IGNORECASE)  
-        pyperclip.copy(newURL)  
-        pyautogui.hotkey('ctrl', 'v')   
-        pyautogui.press('enter')  
-
-        messagebox.showinfo("?", "Start filling TTV?")  
-        ttv()
-
-        messagebox.showinfo("?", "Lanjut CPPT?")  
+        openLink('ttv') 
+        messagebox.showinfo('Notifikasi', "Isi TTV?") 
         time.sleep(2)
-        pyautogui.hotkey('ctrl', 'l')  
-        pyautogui.hotkey('ctrl', 'c')  
-        url = pyperclip.paste()  
-        newURL = re.sub(r'\bpemeriksaan_ttv\b', 'cppt', url, flags=re.IGNORECASE) 
-        pyperclip.copy(newURL)  
-        pyautogui.hotkey('ctrl', 'v')   
-        pyautogui.press('enter') 
-
-        messagebox.showinfo("Ready", "Start filling (doctor) CPPT?")  
+        ttv() 
+        messagebox.showinfo('Notifikasi', "Lanjutkan CPPT?")  
+        time.sleep(2)
+        openLink('cppt') 
+        messagebox.showinfo('Notifikasi', "Isi CPPT lapor dokter?")  
+        time.sleep(2)
         cppt('l')
-        messagebox.showinfo("Complete", "Start filling (nurse) CPPT?")  
+        messagebox.showinfo('Notifikasi', "Isi CPPT perawat?")  
+        time.sleep(2)
         cppt('p')
-        messagebox.showinfo("Complete", "Your document is complete. Good job!")  
+        messagebox.showinfo('Notifikasi', 'Lanjutkan asesmen?')  
+        time.sleep(2)
+        if opt == 'd' :
+            openLink('asesmenDewasa')
+            messagebox.showinfo('Notifikasi', 'Isi asesmen dewasa?')
+            time.sleep(2)
+            akrid()
+        else :
+            openLink('asesmenGeriatri')  
+            messagebox.showinfo('Notifikasi', 'Isi asesmen geriatri?')
+            time.sleep(2)
+            akrig() 
+        messagebox.showinfo('Notifikasi', "Lanjutkan diagnosa?")  
+        time.sleep(2)
+        diagnose()  
+        messagebox.showinfo('Notifikasi', "Lanjutkan implementasi?")  
+        time.sleep(2)
+        implement()   
+        messagebox.showinfo('Notifikasi', "Laporan pasien baru selesai")  
 
     class modEntry(tk.Entry):
         def __init__(self, master=None, placeholder='', color='grey', *args, **kwargs):
@@ -2903,20 +2850,28 @@ def main():
         pyautogui.hotkey('ctrl', 'c')  
         url = pyperclip.paste()  
 
-        if opt == 'ttv':
-            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1pemeriksaan_ttv", url)  
+        if opt == 'asesmenDewasa':
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1asperawat_ranap", url)  
+        if opt == 'asesmenGeriatri':
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1asperawat_ranap_geriatri", url)  
         if opt == 'cppt': 
             newURL = re.sub(r"(rawatinap/)[^?]+", r"\1cppt", url)  
         if opt == 'diagnose': 
-            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1implementasi_keperawatan", url)  
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1implementasi_keperawatan", url) 
+        if opt == 'discharge': 
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1discharge_planning", url)  
         if opt == 'handover': 
             newURL = re.sub(r"(rawatinap/)[^?]+", r"\1handover_dewasa1", url)  
+        if opt == 'ttv':
+            newURL = re.sub(r"(rawatinap/)[^?]+", r"\1pemeriksaan_ttv", url)  
  
         pyperclip.copy(newURL)  
         pyautogui.hotkey('ctrl', 'v')   
-        pyautogui.press('enter') 
+        pyautogui.press('enter')  
 
-        messagebox.showinfo('Notification', 'Continue ?')
+    diagnoseList = []
+    implementationList = [] 
+    interventionList = [] 
 
     def copyCPPT(line_data):  
         data = line_data.split('-')
@@ -2936,7 +2891,7 @@ def main():
         else :
             statusO2 = 'dengan O2'
 
-        stringTTV = f'TD: {sistole}/{diastole}, N: {nadi}, S: {suhu}, RR: {rr}, SPO2: {spo2} {statusO2}'
+        stringTTV = f'TD: {sistole}/{diastole}, N: {nadi}, S: {suhu}, RR: {rr}, SPO2: {spo2}% {statusO2}'
    
         currentDate = datetime.now().strftime("%Y-%m-%d")
         currentHour = datetime.now().hour 
@@ -2969,7 +2924,7 @@ def main():
         pyautogui.hotkey('ctrl', 'a')  
         pyautogui.hotkey('ctrl', 'c')  
         s = pyperclip.paste()  
-        s_res = re.sub(r'pasien mengatakan\s*', '', s, flags=re.IGNORECASE)   
+        s_res = re.sub(r'(?:pasien|px)\s*mengatakan\s*', '', s, flags=re.IGNORECASE)   
         pyperclip.copy(s_res)  
         pyautogui.hotkey('ctrl', 'v')   
 
@@ -2990,107 +2945,101 @@ def main():
         pyautogui.hotkey('ctrl', 'a')  
         pyautogui.hotkey('ctrl', 'c')  
         asesmen = pyperclip.paste()  
-
-        asesmen_new = []
-        implementasi = [] # sekalian bikin implementasi lah
-        intervensi = [] # sekalian bikin intervensi dari asesmen yang didapat 
  
         if re.search(r'nyeri', asesmen, re.IGNORECASE):
-            asesmen_new.append("nyeri akut") 
-            implementasi.append('skala nyeri menurun')
-            implementasi.append('grimace berkurang')
-            intervensi.append("kaji keluhan nyeri") 
+            diagnoseList.append("nyeri akut") 
+            implementationList.append('skala nyeri menurun')
+            implementationList.append('grimace berkurang')
+            interventionList.append("kaji keluhan nyeri") 
  
         if re.search(r'pola napas', asesmen, re.IGNORECASE):
-            asesmen_new.append("pola napas tidak efektif")
-            implementasi.append('frekuensi napas membaik')  
-            implementasi.append('dipsnea menurun')  
-            intervensi.append("pantau kepatenan jalan napas")  
-            intervensi.append("monitor saturasi secara berkala") 
+            diagnoseList.append("pola napas tidak efektif")
+            implementationList.append('frekuensi napas membaik')  
+            implementationList.append('dipsnea menurun')  
+            interventionList.append("pantau kepatenan jalan napas")  
+            interventionList.append("monitor saturasi secara berkala") 
 
         if re.search(r'pola nafas', asesmen, re.IGNORECASE):
-            asesmen_new.append("pola napas tidak efektif")  
-            implementasi.append('frekuensi napas membaik')  
-            implementasi.append('dipsnea menurun')   
-            intervensi.append("pantau kepatenan jalan napas") 
-            intervensi.append("monitor saturasi secara berkala") 
+            diagnoseList.append("pola napas tidak efektif")  
+            implementationList.append('frekuensi napas membaik')  
+            implementationList.append('dipsnea menurun')   
+            interventionList.append("pantau kepatenan jalan napas") 
+            interventionList.append("monitor saturasi secara berkala") 
 
         if re.search(r'bersihan', asesmen, re.IGNORECASE):
-            asesmen_new.append("bersihan jalan napas tidak efektif") 
-            implementasi.append('produksi sputum menurun')   
-            implementasi.append('wheezing/ronchi menurun')   
-            intervensi.append("kaji keluhan batuk") 
-            intervensi.append("monitor suara nafas") 
+            diagnoseList.append("bersihan jalan napas tidak efektif") 
+            implementationList.append('produksi sputum menurun')   
+            implementationList.append('wheezing/ronchi menurun')   
+            interventionList.append("kaji keluhan batuk") 
+            interventionList.append("monitor suara nafas") 
 
         if re.search(r'curah jantung', asesmen, re.IGNORECASE):
-            asesmen_new.append("penurunan curah jantung")
-            implementasi.append('status hemodinamik membaik')   
-            intervensi.append("monitor status hemodinamik") 
+            diagnoseList.append("penurunan curah jantung")
+            implementationList.append('status hemodinamik membaik')   
+            interventionList.append("monitor status hemodinamik") 
 
         if re.search(r'hipertermi', asesmen, re.IGNORECASE):
-            asesmen_new.append("hipertermia")
-            implementasi.append('suhu tubuh dalam batas normal')   
-            intervensi.append("monitor suhu tubuh bila perlu") 
+            diagnoseList.append("hipertermia")
+            implementationList.append('suhu tubuh dalam batas normal')   
+            interventionList.append("monitor suhu tubuh bila perlu") 
 
         if re.search(r'hipervolemi', asesmen, re.IGNORECASE):
-            asesmen_new.append("hipervolemia")
-            implementasi.append('intake dan output seimbang')   
-            implementasi.append('edema berkurang')   
-            intervensi.append("batasi asupan cairan") 
-            intervensi.append("monitor keseimbangan cairan") 
+            diagnoseList.append("hipervolemia")
+            implementationList.append('intake dan output seimbang')   
+            implementationList.append('edema berkurang')   
+            interventionList.append("batasi asupan cairan") 
+            interventionList.append("monitor keseimbangan cairan") 
 
         if re.search(r'nausea', asesmen, re.IGNORECASE):
-            asesmen_new.append("nausea")
-            implementasi.append('keluhan mual berkurang')   
-            intervensi.append("monitor keluhan muntah") 
-            intervensi.append("pantau isyarat nonverbal ketidaknyamanan") 
+            diagnoseList.append("nausea")
+            implementationList.append('keluhan mual berkurang')   
+            interventionList.append("monitor keluhan muntah") 
+            interventionList.append("pantau isyarat nonverbal ketidaknyamanan") 
 
         if re.search(r'adaptif', asesmen, re.IGNORECASE):
-            asesmen_new.append("penurunan kapasitas adaptif intrakranial")
-            implementasi.append('tingkat kesadaran membaik')   
-            implementasi.append('irama napas membaik')   
-            intervensi.append("monitor peningkatan tekanan darah") 
-            intervensi.append("monitor irreguleritas irama napas") 
-            intervensi.append("monitor penurunan tingkat kesadaran") 
+            diagnoseList.append("penurunan kapasitas adaptif intrakranial")
+            implementationList.append('tingkat kesadaran membaik')   
+            implementationList.append('irama napas membaik')   
+            interventionList.append("monitor peningkatan tekanan darah") 
+            interventionList.append("monitor irreguleritas irama napas") 
+            interventionList.append("monitor penurunan tingkat kesadaran") 
 
         if re.search(r'ketidakstabilan', asesmen, re.IGNORECASE):
-            asesmen_new.append("resiko ketidakstabilan kadar gula darah")
-            implementasi.append('kadar gula darah dalam batas normal')   
-            intervensi.append("pantau kadar gula darah secara berkala") 
+            diagnoseList.append("resiko ketidakstabilan kadar gula darah")
+            implementationList.append('kadar gula darah dalam batas normal')   
+            interventionList.append("pantau kadar gula darah secara berkala") 
 
         if re.search(r'infeksi', asesmen, re.IGNORECASE):
-            asesmen_new.append("resiko infeksi")
-            implementasi.append('tidak ada tanda infeksi') 
-            intervensi.append("pantau tanda tanda infeksi") 
+            diagnoseList.append("resiko infeksi")
+            implementationList.append('tidak ada tanda infeksi') 
+            interventionList.append("pantau tanda tanda infeksi") 
 
         if re.search(r'jatuh', asesmen, re.IGNORECASE):
-            asesmen_new.append("resiko jatuh")
-            implementasi.append('tidak ada kejadian jatuh')  
-            intervensi.append("pasang kunci bed dan siderail") 
+            diagnoseList.append("resiko jatuh")
+            implementationList.append('tidak ada kejadian jatuh')  
+            interventionList.append("pasang kunci bed dan siderail") 
  
-        # Convert asesmen_new to a numbered string with new lines
-        asesmen_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(asesmen_new))  
+        # Convert diagnoseList to a numbered string with new lines
+        asesmen_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(diagnoseList))  
         pyperclip.copy(asesmen_numbering)  
         pyautogui.hotkey('ctrl', 'v')   
         pyautogui.press('tab') 
         pyautogui.press('tab') 
 
-        # Planning
-
+        # Planning 
         pyautogui.hotkey('ctrl', 'a')  
-        implementasi.insert(0, 'ttv dalam batas normal') 
-        implementasi_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(implementasi))  
-        pyperclip.copy(implementasi_numbering)  
+        implementationList.insert(0, 'ttv dalam batas normal') 
+        implementationList_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(implementationList))  
+        pyperclip.copy(implementationList_numbering)  
         pyautogui.hotkey('ctrl', 'v')   
         pyautogui.press('tab') 
         pyautogui.press('tab')  
 
-        # Intervensi 
-
-        intervensi.insert(0, "monitor tanda vital") # Add to beginning list
-        intervensi.append("kolaborasi dengan tim medis") # Add to end of list 
-        intervensi_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(intervensi)) 
-        pyperclip.copy(intervensi_numbering)  
+        # interventionList  
+        interventionList.insert(0, "monitor tanda vital") # Add to beginning list
+        interventionList.append("kolaborasi dengan tim medis") # Add to end of list 
+        interventionList_numbering = '\n'.join(f"{i+1}. {item}" for i, item in enumerate(interventionList)) 
+        pyperclip.copy(interventionList_numbering)  
         pyautogui.hotkey('ctrl', 'v')   
 
         pyautogui.press('tab') 
@@ -3107,27 +3056,61 @@ def main():
         else:
             pyautogui.write('m') 
         pyautogui.press('tab')
-         
-    def autoRoutine(line_data): 
+ 
+        setDiagnose(diagnoseList)
+
+        messagebox.showinfo('Notification', 'Redirect to diagnose?')
+ 
+
+    def setDiagnose(diagnoseList):
+        reset()
+        
+        # Sinkronisasi
+        diagnose_map = { 
+            "bersihan jalan napas": bersihanJalanNapas_VAR,
+            "diare": diare_VAR,
+            "hipertermia": hipertermia_VAR,
+            "hipervolemia": hipervolemia_VAR,
+            "resiko ketidakstabilan kadar gula darah": ketidakstabilanGD_VAR,
+            "nausea": nausea_VAR,
+            "nyeri akut": nyeriAkut_VAR,
+            "penurunan curah jantung": penurunanCurahJantung_VAR,
+            "penurunan kapasitas adaptif intrakranial": penurunanKapasitasAdaptif_VAR,
+            "pola napas tidak efektif": polaNapas_VAR,
+            "resiko infeksi": resikoInfeksi_VAR,
+            "resiko jatuh": resikoJatuh_VAR
+        }
+        
+        for diagnosis in diagnoseList:
+            if diagnosis in diagnose_map:
+                diagnose_map[diagnosis].set(True)
+  
+    def autoRoutine(line_data):  
+        time.sleep(2)
+        openLink('ttv')
         time.sleep(2)
         autoTTV(line_data)
         time.sleep(2)
-        openLink('cppt')
+        openLink('cppt') 
         time.sleep(2)
-        copyCPPT(line_data)
+        copyCPPT(line_data) 
+        setDiagnose(diagnoseList)  
         time.sleep(2) 
-
+        openLink('diagnose')
+        time.sleep(2) 
+        diagnose()
+        time.sleep(2)
+        implement()
+        time.sleep(2)
           
-    # Main apps GUI
+    # ======================== Main apps GUI ============================= #
  
     app = tk.Tk()
     app.title("males-banget")   
     app.after(3600000, app.destroy)
-    app.attributes('-topmost', True)  
-       
+    app.attributes('-topmost', True)   
     ff = 'Calibri'
-    fs = '8'
- 
+    fs = '8' 
     notebook = ttk.Notebook(app)
     notebook.pack(expand=True, fill='both')
  
@@ -3157,28 +3140,8 @@ def main():
     info = tk.Label(routineAutoFieldset, text='Generated button will appear here', font=(ff, fs)) 
     info.pack()  
 
-
-
-    # vitalSignAuto = tk.Button(routineAutoFill, text='TTV', font=(ff, fs), command=autoTTV)
-    # vitalSignAuto.pack(side=tk.LEFT, padx='1')
-    # cppt_copy_BT = tk.Button(routineAutoFill, text="CPPT", font=(ff, fs), command=lambda: cppt('c')) 
-    # cppt_copy_BT.pack(side=tk.LEFT, padx='1')  
-
-    # redirectFieldset = ttk.LabelFrame(tab1, text=" Redirect ")
-    # redirectFieldset.pack(padx=5, pady=5)   
-    # redirectTotal_EN = modEntry(redirectFieldset, width=5, font=(ff, fs), placeholder='loop')
-    # redirectTotal_EN.pack(side=tk.LEFT, padx='1')    
-    # redirectTTV_BT = tk.Button(redirectFieldset, text="ttv", font=(ff, fs), command=lambda: redirect('ttv')) 
-    # redirectTTV_BT.pack(side=tk.LEFT, padx='1')    
-    # redirectCPPT_BT = tk.Button(redirectFieldset, text="cppt", font=(ff, fs), command=lambda: redirect('cppt')) 
-    # redirectCPPT_BT.pack(side=tk.LEFT, padx='1')    
-    # redirectDiagnose_BT = tk.Button(redirectFieldset, text="diagnose", font=(ff, fs), command=lambda: redirect('diagnose')) 
-    # redirectDiagnose_BT.pack(side=tk.LEFT, padx='1')    
-    # redirectHandOver_BT = tk.Button(redirectFieldset, text="handover", font=(ff, fs), command=lambda: redirect('handover')) 
-    # redirectHandOver_BT.pack(side=tk.LEFT, padx='1')  
-
-    # ------------------------------------------------------------------------------------------
-   
+    # Tab 2 : New Patient
+  
     identity_frame = ttk.Frame(tab2)
     identity_frame.grid(row=0, column=0, pady=1, sticky="w")  
     
@@ -3302,7 +3265,7 @@ def main():
     rowButton_2_FR = ttk.Frame(tab2)
     rowButton_2_FR.grid(row=23, column=0, padx=1, pady=1, sticky="w")  
 
-    dp_BT = tk.Button(rowButton_2_FR, text="discharge", font=(ff, fs), command=dp) 
+    dp_BT = tk.Button(rowButton_2_FR, text="discharge", font=(ff, fs), command=discharge) 
     dp_BT.pack(side=tk.LEFT, padx='1')   
     terima_transfer_BT = tk.Button(rowButton_2_FR, text="tr-accept", font=(ff, fs), command=terima_transfer) 
     terima_transfer_BT.pack(side=tk.LEFT, padx='1')   
@@ -3358,11 +3321,7 @@ def main():
     rx_copy_BT.pack(side=tk.RIGHT)  
     rx_EN = tk.Text(tab3, width=30, height=10) 
     rx_EN.grid(row=11, column=1, padx=5, rowspan=10, sticky="nsew")   
-
-    
-  
-   
-  
+ 
     app.mainloop()
       
 # Login GUI

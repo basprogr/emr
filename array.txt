@@ -7,7 +7,7 @@ data ini tersusun dengan format tanggaYYYYMMDD-nomorRuang-sistole-diastole-nadi-
 20260401-303a-130-70-73-36.3-23-97-1
 20260401-304a-140-80-74-36.4-24-98-1
 20260401-305a-150-90-75-36.5-25-99-1
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 bisakah aku generate beberapa tombol untuk mentrigger fungsi dengan parameter menggunakan lamda sesuai jumlah baris data yang ada
 misal jika diatas ada 5 baris kode.
 maka aku ingin mendapatkan 5 tombol mulai 301a sampai 305a.
